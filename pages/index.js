@@ -1,6 +1,5 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import appConfig from '../config.json';
-
 import React from 'react';
 import { useRouter } from 'next/router';
 
@@ -26,21 +25,7 @@ function Titulo(props) {
     )
 }
 
-/* function HomePage() {
-    return (
-        <div>
-            <GlobalStyle />
-            <Titulo tag = "h2"> Boas vindas de volta!</Titulo>
-            <h2> Discord - Alura Matrix </h2>            
-        </div>
-    )
-  }
-  
-  export default HomePage */
-
 export default function PaginaInicial() {
-    //const username = 'KellyBarbosa';
-    //const [username, setUsername] = useState();
     const [username, setUsername] = React.useState('');
     const roteamento = useRouter();
 
@@ -74,8 +59,6 @@ export default function PaginaInicial() {
                         as="form"
                         onSubmit = {function(e){
                             e.preventDefault();
-                            console.log('ALgo')
-                            // window.location.href = '/chat';
                             roteamento.push('/chat');
                         }}
 
@@ -88,9 +71,6 @@ export default function PaginaInicial() {
                         <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                             {appConfig.name}
                         </Text>
-
-
-                        {/* <input type='text' value={username} onChange={function(event) { setUsername(event.target.value) }} /> */}
 
                         <TextField
                             value = {username}
@@ -136,13 +116,15 @@ export default function PaginaInicial() {
                             minHeight: '240px',
                         }}
                     >
-                        <Image
+
+                        {username.length > 2 && (<Image
                             styleSheet={{
                                 borderRadius: '50%',
                                 marginBottom: '16px',
                             }}
                             src={`https://github.com/${username}.png`}
-                        />
+                        />) }
+                        
                         <Text
                             variant="body4"
                             styleSheet={{
