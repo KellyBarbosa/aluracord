@@ -1,4 +1,8 @@
-import { Box, Text, TextField, Image, Button } from '@skynexui/components';
+import { Box, Text, TextField, Image, Button, Icon } from '@skynexui/components';
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLevelUp, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+
 import React from 'react';
 import appConfig from '../config.json';
 
@@ -10,8 +14,8 @@ export default function ChatPage() {
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
             id: listaDeMensagens.length + 1,
-            de: 'Kelly',
-            texto: novaMensagem,
+            from: 'Kelly',
+            text: novaMensagem,
         };
         setListaDeMensagens([
             mensagem,
@@ -19,19 +23,18 @@ export default function ChatPage() {
         ]);
         setMensagem('');
     }
-    // Sua lógica vai aqui
 
-    // ./Sua lógica vai aqui
     return (
         <Box
             styleSheet={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                backgroundColor: appConfig.theme.colors.primary[500],
-                backgroundImage: `url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)`,
+                backgroundImage: `url(https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260)`,
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 color: appConfig.theme.colors.neutrals['000']
             }}
+
         >
+
             <Box
                 styleSheet={{
                     display: 'flex',
@@ -44,9 +47,11 @@ export default function ChatPage() {
                     maxWidth: '95%',
                     maxHeight: '95vh',
                     padding: '32px',
+                    opacity: 0.9,
                 }}
             >
                 <Header />
+
                 <Box
                     styleSheet={{
                         position: 'relative',
@@ -60,17 +65,8 @@ export default function ChatPage() {
                     }}
                 >
 
+                    <MessageList mensagens={listaDeMensagens} setLista={setListaDeMensagens} />
 
-                    <MessageList mensagens={listaDeMensagens} />
-
-
-                    {/* {
-                    listaDeMensagens.map((mensagemAtual) => (
-                    <li key={mensagemAtual.id}>
-                        {mensagemAtual.from}: {mensagemAtual.texto}
-                    </li>))
-                    }
- */}
                     <Box
                         as="form"
                         styleSheet={{
@@ -100,6 +96,12 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+
+                        <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
+                            handleNovaMensagem(mensagem)
+                        }}
+                        />
+
                     </Box>
                 </Box>
             </Box>
@@ -126,69 +128,90 @@ function Header() {
 }
 
 function MessageList(props) {
-    // console.log('MessageList', props);
+
+    function handleRemove(id) {
+        const lista = props.mensagens.filter((msg) => msg.id !== id)
+        props.setLista(lista)
+    }
+
     return (
-        <Box
-            tag="ul"
-            styleSheet={{
-                overflow: 'scroll',
-                display: 'flex',
-                flexDirection: 'column-reverse',
-                flex: 1,
-                color: appConfig.theme.colors.neutrals["000"],
-                marginBottom: '16px',
-            }}
-        >
-            {props.mensagens.map((mensagem) => {
-                return (
-                    
-                        <Text
-                            key={mensagem.id}
-                            tag="li"
-                            styleSheet={{
-                                borderRadius: '5px',
-                                padding: '6px',
-                                marginBottom: '12px',
-                                hover: {
-                                    backgroundColor: appConfig.theme.colors.neutrals[700],
-                                }
-                            }}
-                        >
-                            <Box
+
+        <>
+            <Box
+                tag="ul"
+                styleSheet={{
+                    display: 'flex',
+                    flexDirection: 'column-reverse',
+                    flex: 1,
+                    color: appConfig.theme.colors.neutrals["000"],
+                    marginBottom: '16px',
+                    overflow: 'auto',
+                }}
+            >
+                {props.mensagens.map((mensagem) => {
+                    return (
+                        <>
+                            <Text
+                                key={mensagem.id}
+                                tag="li"
                                 styleSheet={{
-                                    marginBottom: '8px',
+                                    borderRadius: '5px',
+                                    padding: '6px',
+                                    marginBottom: '12px',
+                                    hover: {
+                                        backgroundColor: appConfig.theme.colors.neutrals[700],
+                                    }
                                 }}
                             >
-                                <Image
-                                    styleSheet={{
-                                        width: '20px',
-                                        height: '20px',
-                                        borderRadius: '50%',
-                                        display: 'inline-block',
-                                        marginRight: '8px',
-                                    }}
-                                    src={`https://github.com/kellybarbosa.png`}
-                                />
-                                <Text tag="strong">
-                                    {mensagem.de}
-                                </Text>
-                                <Text
-                                    styleSheet={{
-                                        fontSize: '10px',
-                                        marginLeft: '8px',
-                                        color: appConfig.theme.colors.neutrals[300],
-                                    }}
-                                    tag="span"
-                                >
-                                    {(new Date().toLocaleDateString())}
-                                </Text>
-                            </Box>
-                            {mensagem.texto}
-                        </Text>
-                    
-                );
-            })}
+                                <Box styleSheet={{
+                                    marginBottom: '8px',
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                }} >
 
-        </Box>
+                                    <Image
+                                        styleSheet={{
+                                            width: '20px',
+                                            height: '20px',
+                                            borderRadius: '50%',
+                                            display: 'inline-block',
+                                            marginRight: '8px',
+                                        }}
+                                        src={`https://images.pexels.com/photos/2607544/pexels-photo-2607544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`}
+                                    />
+
+                                    <Text tag="strong">
+                                        {mensagem.from}
+                                    </Text>
+
+                                    <Text
+                                        styleSheet={{
+                                            fontSize: '10px',
+                                            marginLeft: '8px',
+                                            color: appConfig.theme.colors.neutrals[300],
+                                        }}
+                                        tag="span"
+                                    >
+                                        {(new Date().toLocaleDateString())}
+                                    </Text>
+                                    
+                                    <FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
+                                        handleRemove(mensagem.id)
+                                    }} />
+                                </Box>
+                                {mensagem.text}
+
+                            </Text>
+
+                        </>
+                    );
+                })}
+
+            </Box>
+
+
+
+        </>
     )
 }

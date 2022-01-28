@@ -22,6 +22,18 @@ function GlobalStyle() {
         #__next > * {
           flex: 1;
         }
+
+        .iconUp {
+          font-size: 20px;
+          margin-bottom: 10px; 
+          color: #E0F2E9;
+          cursor: pointer;
+      }
+
+      .iconTrash {
+        cursor: pointer;
+        margin-left: auto;
+      }
         /* ./App fit Height */ 
       `}</style>
     );
