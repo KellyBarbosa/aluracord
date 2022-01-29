@@ -34,6 +34,49 @@ function GlobalStyle() {
         cursor: pointer;
         margin-left: auto;
       }
+      
+      .base:hover {
+        position: absolute;
+        background-color: #181F25;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; 
+        transform: scale(4);   
+      }
+      
+      .base p {
+        display: none;
+      }
+
+      .base:hover p{
+        display: block;
+        font-size: 5px;
+        margin: 0 5px 5px 5px;  /* topo | direita | inferior | esquerda */
+       
+      }
+
+      .image {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+      }
+      
+      .base:hover img{
+        margin: 5px;
+      }
+
+      .loading{
+        height: 100%;
+        margin-left: 40px;
+        max-width: 95%;
+        max-height: 95vh;
+        /* padding: 32px; */
+
+      }
+
         /* ./App fit Height */ 
       `}</style>
     );

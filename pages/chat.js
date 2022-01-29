@@ -9,7 +9,7 @@ import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQxMDYxNiwiZXhwIjoxOTU4OTg2NjE2fQ.BSOcXdkNNCIA5JAhSVFw6mCF1A78dlbHQZqV9hPAaTc';
-const SUPABASE_URL = 'https://mjbbqjecdnrscpsshbil.supabase.co'; 
+const SUPABASE_URL = 'https://mjbbqjecdnrscpsshbil.supabase.co';
 
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
@@ -19,13 +19,14 @@ export default function ChatPage() {
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
-    React.useEffect( () => {
+    React.useEffect(() => {
+
         supabaseClient.from('mensagens').select('*').order('id', { ascending: false }).then(({ data }) => {
             setListaDeMensagens(data)
-         });
+        });
     }, []);
 
-    
+
 
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
@@ -35,16 +36,18 @@ export default function ChatPage() {
 
         supabaseClient.from('mensagens').insert([mensagem]).then(({ data }) => {
             setListaDeMensagens([
-            data[0],
-            ...listaDeMensagens,
-        ]);
+                data[0],
+                ...listaDeMensagens,
+            ]);
         })
 
-        
+
         setMensagem('');
     }
 
     return (
+
+
         <Box
             styleSheet={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -54,6 +57,7 @@ export default function ChatPage() {
             }}
 
         >
+
 
             <Box
                 styleSheet={{
@@ -70,6 +74,7 @@ export default function ChatPage() {
                     opacity: 0.9,
                 }}
             >
+
                 <Header />
 
                 <Box
@@ -85,44 +90,55 @@ export default function ChatPage() {
                     }}
                 >
 
-                    <MessageList mensagens={listaDeMensagens} setLista={setListaDeMensagens} />
+                    {/*  {listaDeMensagens.length === 0 && 
+            <img  className='loading' src={`https://c.tenor.com/7NX24XoJX0MAAAAC/loading-fast.gif`} />
+            } */}
 
-                    <Box
-                        as="form"
-                        styleSheet={{
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <TextField
-                            value={mensagem}
-                            onChange={(e) => setMensagem(e.target.value)}
-                            onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleNovaMensagem(mensagem);
-                                }
-                            }}
-                            placeholder="Insira sua mensagem aqui..."
-                            type="textarea"
-                            styleSheet={{
-                                width: '100%',
-                                border: '0',
-                                resize: 'none',
-                                borderRadius: '5px',
-                                padding: '6px 8px',
-                                backgroundColor: appConfig.theme.colors.neutrals[800],
-                                marginRight: '12px',
-                                color: appConfig.theme.colors.neutrals[200],
-                            }}
-                        />
+                    {listaDeMensagens.length === 0 ?
+                        (<img className='loading' src={`https://c.tenor.com/7NX24XoJX0MAAAAC/loading-fast.gif`} />) : (
+                            <>
+                                <MessageList mensagens={listaDeMensagens} setLista={setListaDeMensagens} />
 
-                        <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
-                            handleNovaMensagem(mensagem)
-                        }}
-                        />
+                                <Box
+                                    as="form"
+                                    styleSheet={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <TextField
+                                        value={mensagem}
+                                        onChange={(e) => setMensagem(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                handleNovaMensagem(mensagem);
+                                            }
+                                        }}
+                                        placeholder="Insira sua mensagem aqui..."
+                                        type="textarea"
+                                        styleSheet={{
+                                            width: '100%',
+                                            border: '0',
+                                            resize: 'none',
+                                            borderRadius: '5px',
+                                            padding: '6px 8px',
+                                            backgroundColor: appConfig.theme.colors.neutrals[800],
+                                            marginRight: '12px',
+                                            color: appConfig.theme.colors.neutrals[200],
+                                        }}
+                                    />
 
-                    </Box>
+                                    <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
+                                        handleNovaMensagem(mensagem)
+                                    }}
+                                    />
+
+                                </Box>
+                            </>
+                        )
+                    }
+
                 </Box>
             </Box>
         </Box>
@@ -148,6 +164,8 @@ function Header() {
 }
 
 function MessageList(props) {
+
+    const [mouse, setMouse] = React.useState('');
 
     function handleRemove(id) {
         const lista = props.mensagens.filter((msg) => msg.id !== id)
@@ -190,17 +208,29 @@ function MessageList(props) {
                                     alignItems: "center",
                                 }} >
 
-                                    <Image
-                                        styleSheet={{
+                                    <div className='base'>
+                                        <img className='image' src={`https://github.com/${mensagem.from}.png`} />
+                                        {/* <Image
+                                            styleSheet={{
                                             width: '20px',
                                             height: '20px',
                                             borderRadius: '50%',
                                             display: 'inline-block',
                                             marginRight: '8px',
                                         }}
-                                        /* src={`https://images.pexels.com/photos/2607544/pexels-photo-2607544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`} */
                                         src={`https://github.com/${mensagem.from}.png`}
+                                        
                                     />
+                                     */}
+                                        {/* src={`https://images.pexels.com/photos/2607544/pexels-photo-2607544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`} */}
+
+                                        <p>
+                                            {mensagem.from}
+                                        </p>
+
+                                    </div>
+
+
 
                                     <Text tag="strong">
                                         {mensagem.from}
@@ -216,7 +246,7 @@ function MessageList(props) {
                                     >
                                         {(new Date().toLocaleDateString())}
                                     </Text>
-                                    
+
                                     <FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
                                         handleRemove(mensagem.id)
                                     }} />
