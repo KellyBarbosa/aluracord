@@ -113,7 +113,7 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                     {listaDeMensagens.length === 0 ?
                         (<img className='loading' src={`https://c.tenor.com/7NX24XoJX0MAAAAC/loading-fast.gif`} />) : (
                             <>
-                                <MessageList mensagens={listaDeMensagens} setLista={setListaDeMensagens} />
+                                <MessageList mensagens={listaDeMensagens} setLista={setListaDeMensagens} user={usuarioLogado} />
 
                                 <Box
                                     as="form"
@@ -254,10 +254,12 @@ function MessageList(props) {
                                 >
                                     {(new Date().toLocaleDateString())}
                                 </Text>
-
-                                <FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
+                                
+                                    {( props.user === mensagem.from) && (<FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
                                     handleRemove(mensagem.id)
-                                }} />
+                                }} />)}
+
+                                
                             </Box>
 
                             {mensagem.text.startsWith(':sticker:')
