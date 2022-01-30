@@ -1,4 +1,4 @@
-import { Box, Text, TextField, Image, Button, Icon } from '@skynexui/components';
+import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLevelUp, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -11,19 +11,28 @@ import { useRouter } from 'next/router';
 import appConfig from '../config.json';
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
 
+export async function getServerSideProps() {
+    const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+    const SUPABASE_URL = process.env.SUPABASE_URL;
 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQxMDYxNiwiZXhwIjoxOTU4OTg2NjE2fQ.BSOcXdkNNCIA5JAhSVFw6mCF1A78dlbHQZqV9hPAaTc';
-const SUPABASE_URL = 'https://mjbbqjecdnrscpsshbil.supabase.co';
-
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-function escutaMensagensEmTempoReal(adicionaMensagem) {
-    return supabaseClient.from('mensagens').on('INSERT', (respostaLive) => {
-        adicionaMensagem(respostaLive.new);
-    }).subscribe();
+    return {
+        props:
+        {
+            SUPABASE_ANON_KEY,
+            SUPABASE_URL
+        },
+    };
 }
 
-export default function ChatPage() {
+export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
+
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function escutaMensagensEmTempoReal(adicionaMensagem) {
+        return supabaseClient.from('mensagens').on('INSERT', (respostaLive) => {
+            adicionaMensagem(respostaLive.new);
+        }).subscribe();
+    }
 
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
@@ -52,12 +61,7 @@ export default function ChatPage() {
             text: novaMensagem,
         };
 
-        supabaseClient.from('mensagens').insert([mensagem]).then( /* ({ data }) => {
-            setListaDeMensagens([
-                data[0],
-                ...listaDeMensagens,
-            ]); 
-        } */ )
+        supabaseClient.from('mensagens').insert([mensagem]).then()
 
         setMensagem('');
     }
@@ -142,7 +146,6 @@ export default function ChatPage() {
                                     />
 
                                     <ButtonSendSticker onStickerClick={(sticker) => {
-                                        //handleNovaMensagem(':sticker: '+ sticker);
                                         handleNovaMensagem(`:sticker: ${sticker}`);
                                     }} />
 
@@ -262,8 +265,6 @@ function MessageList(props) {
                                     mensagem.text
                                 )
                             }
-
-                            {/* {mensagem.text} */}
 
                         </Text>
 
