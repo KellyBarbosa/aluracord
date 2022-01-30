@@ -3,19 +3,30 @@ import { Box, Text, TextField, Image, Button, Icon } from '@skynexui/components'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLevelUp, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
-import React from 'react';
-import appConfig from '../config.json';
-
 import { createClient } from '@supabase/supabase-js'
+
+import React from 'react';
+import { useRouter } from 'next/router';
+
+import appConfig from '../config.json';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker';
+
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzQxMDYxNiwiZXhwIjoxOTU4OTg2NjE2fQ.BSOcXdkNNCIA5JAhSVFw6mCF1A78dlbHQZqV9hPAaTc';
 const SUPABASE_URL = 'https://mjbbqjecdnrscpsshbil.supabase.co';
 
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
+function escutaMensagensEmTempoReal(adicionaMensagem) {
+    return supabaseClient.from('mensagens').on('INSERT', (respostaLive) => {
+        adicionaMensagem(respostaLive.new);
+    }).subscribe();
+}
 
 export default function ChatPage() {
 
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username;
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
@@ -24,23 +35,29 @@ export default function ChatPage() {
         supabaseClient.from('mensagens').select('*').order('id', { ascending: false }).then(({ data }) => {
             setListaDeMensagens(data)
         });
+
+        escutaMensagensEmTempoReal((novaMensagem) => {
+            setListaDeMensagens((valorAtualDaLista) => {
+                return [
+                    novaMensagem,
+                    ...valorAtualDaLista,
+                ]
+            });
+        });
     }, []);
-
-
 
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
-            from: 'kellybarbosa',
+            from: usuarioLogado,
             text: novaMensagem,
         };
 
-        supabaseClient.from('mensagens').insert([mensagem]).then(({ data }) => {
+        supabaseClient.from('mensagens').insert([mensagem]).then( /* ({ data }) => {
             setListaDeMensagens([
                 data[0],
                 ...listaDeMensagens,
-            ]);
-        })
-
+            ]); 
+        } */ )
 
         setMensagem('');
     }
@@ -57,7 +74,6 @@ export default function ChatPage() {
             }}
 
         >
-
 
             <Box
                 styleSheet={{
@@ -89,10 +105,6 @@ export default function ChatPage() {
                         padding: '16px',
                     }}
                 >
-
-                    {/*  {listaDeMensagens.length === 0 && 
-            <img  className='loading' src={`https://c.tenor.com/7NX24XoJX0MAAAAC/loading-fast.gif`} />
-            } */}
 
                     {listaDeMensagens.length === 0 ?
                         (<img className='loading' src={`https://c.tenor.com/7NX24XoJX0MAAAAC/loading-fast.gif`} />) : (
@@ -128,6 +140,11 @@ export default function ChatPage() {
                                             color: appConfig.theme.colors.neutrals[200],
                                         }}
                                     />
+
+                                    <ButtonSendSticker onStickerClick={(sticker) => {
+                                        //handleNovaMensagem(':sticker: '+ sticker);
+                                        handleNovaMensagem(`:sticker: ${sticker}`);
+                                    }} />
 
                                     <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
                                         handleNovaMensagem(mensagem)
@@ -188,80 +205,72 @@ function MessageList(props) {
             >
                 {props.mensagens.map((mensagem) => {
                     return (
-                        <>
-                            <Text
-                                key={mensagem.id}
-                                tag="li"
-                                styleSheet={{
-                                    borderRadius: '5px',
-                                    padding: '6px',
-                                    marginBottom: '12px',
-                                    hover: {
-                                        backgroundColor: appConfig.theme.colors.neutrals[700],
-                                    }
-                                }}
-                            >
-                                <Box styleSheet={{
-                                    marginBottom: '8px',
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                }} >
 
-                                    <div className='base'>
-                                        <img className='image' src={`https://github.com/${mensagem.from}.png`} />
-                                        {/* <Image
-                                            styleSheet={{
-                                            width: '20px',
-                                            height: '20px',
-                                            borderRadius: '50%',
-                                            display: 'inline-block',
-                                            marginRight: '8px',
-                                        }}
-                                        src={`https://github.com/${mensagem.from}.png`}
-                                        
-                                    />
-                                     */}
-                                        {/* src={`https://images.pexels.com/photos/2607544/pexels-photo-2607544.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260`} */}
+                        <Text
+                            key={mensagem.id}
+                            tag="li"
+                            styleSheet={{
+                                borderRadius: '5px',
+                                padding: '6px',
+                                marginBottom: '12px',
+                                hover: {
+                                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                                }
+                            }}
+                        >
+                            <Box styleSheet={{
+                                marginBottom: '8px',
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }} >
 
-                                        <p>
-                                            {mensagem.from}
-                                        </p>
+                                <div className='base'>
+                                    <img className='image' src={`https://github.com/${mensagem.from}.png`} />
 
-                                    </div>
-
-
-
-                                    <Text tag="strong">
+                                    <p>
                                         {mensagem.from}
-                                    </Text>
+                                    </p>
 
-                                    <Text
-                                        styleSheet={{
-                                            fontSize: '10px',
-                                            marginLeft: '8px',
-                                            color: appConfig.theme.colors.neutrals[300],
-                                        }}
-                                        tag="span"
-                                    >
-                                        {(new Date().toLocaleDateString())}
-                                    </Text>
+                                </div>
 
-                                    <FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
-                                        handleRemove(mensagem.id)
-                                    }} />
-                                </Box>
-                                {mensagem.text}
+                                <Text tag="strong">
+                                    {mensagem.from}
+                                </Text>
 
-                            </Text>
+                                <Text
+                                    styleSheet={{
+                                        fontSize: '10px',
+                                        marginLeft: '8px',
+                                        color: appConfig.theme.colors.neutrals[300],
+                                    }}
+                                    tag="span"
+                                >
+                                    {(new Date().toLocaleDateString())}
+                                </Text>
 
-                        </>
+                                <FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
+                                    handleRemove(mensagem.id)
+                                }} />
+                            </Box>
+
+                            {mensagem.text.startsWith(':sticker:')
+                                ? (
+                                    <Image src={mensagem.text.replace(':sticker:', '')} />
+                                )
+                                : (
+                                    mensagem.text
+                                )
+                            }
+
+                            {/* {mensagem.text} */}
+
+                        </Text>
+
                     );
                 })}
 
             </Box>
-
-
 
         </>
     )
