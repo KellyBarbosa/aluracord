@@ -36,8 +36,8 @@ export default function PaginaInicial() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     backgroundImage: `url(https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260)`,
                     backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
-                    }}
-            > 
+                }}
+            >
                 <Box
                     styleSheet={{
                         display: 'flex',
@@ -57,7 +57,7 @@ export default function PaginaInicial() {
                     {/* Formulário */}
                     <Box
                         as="form"
-                        onSubmit = {function(e){
+                        onSubmit={function (e) {
                             e.preventDefault();
                             roteamento.push(`/chat?username=${username}`);
                         }}
@@ -65,7 +65,7 @@ export default function PaginaInicial() {
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                             width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
-                            
+
                         }}
                     >
                         <Titulo tag="h2">Boas vindas de volta!</Titulo>
@@ -74,7 +74,7 @@ export default function PaginaInicial() {
                         </Text>
 
                         <TextField
-                            value = {username}
+                            value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             fullWidth
                             textFieldColors={{
@@ -86,7 +86,9 @@ export default function PaginaInicial() {
                                 },
                             }}
                         />
-                        <Button
+
+                        {username.length > 2 ? ( 
+                            <Button
                             type='submit'
                             label='Entrar'
                             fullWidth
@@ -95,8 +97,26 @@ export default function PaginaInicial() {
                                 mainColor: appConfig.theme.colors.primary[500],
                                 mainColorLight: appConfig.theme.colors.primary[400],
                                 mainColorStrong: appConfig.theme.colors.primary[600],
-                                }}
+                            }}
                         />
+
+                        ) : ( 
+                            <Button
+                            type='submit'
+                            label='Entrar'
+                            fullWidth
+                            buttonColors={{
+                                contrastColor: appConfig.theme.colors.neutrals["000"],
+                                mainColor: appConfig.theme.colors.primary[500],
+                                mainColorLight: appConfig.theme.colors.primary[400],
+                                mainColorStrong: appConfig.theme.colors.primary[600],
+                            }}
+                            disabled
+                        />
+
+                        )}
+
+                        
                     </Box>
                     {/* Formulário */}
 
@@ -118,15 +138,40 @@ export default function PaginaInicial() {
                         }}
                     >
 
-                        {username.length > 2 && (<Image
+                        {/* {username.length > 2 && (<Image
                             styleSheet={{
                                 borderRadius: '50%',
                                 marginBottom: '16px',
                             }}
                             src={`https://github.com/${username}.png`}
-                        />) }
-                        
-                        <Text
+                        />) } */}
+
+
+                        {/* {username.length > 2 && (<Image
+                            styleSheet={{
+                                borderRadius: '50%',
+                                marginBottom: '16px',
+                            }}
+                            src={`https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif`}
+                        />)} */}
+
+                         {username.length > 2 ? (<Image
+                            styleSheet={{
+                                borderRadius: '50%',
+                                marginBottom: '16px',
+                            }}
+                            src={`https://github.com/${username}.png`}
+                        />) : (
+                        <Image
+                            styleSheet={{
+                                borderRadius: '50%',
+                                marginBottom: '16px',
+                            }}
+                            src={`https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif`}
+                        />)
+                        }
+
+                        { username.length > 2 ? (<Text
                             variant="body4"
                             styleSheet={{
                                 color: appConfig.theme.colors.neutrals[200],
@@ -136,7 +181,17 @@ export default function PaginaInicial() {
                             }}
                         >
                             {username}
-                        </Text>
+                        </Text>) : ((<Text
+                            variant="body4"
+                            styleSheet={{
+                                color: appConfig.theme.colors.neutrals[200],
+                                backgroundColor: appConfig.theme.colors.neutrals[900],
+                                padding: '3px 10px',
+                                borderRadius: '1000px'
+                            }}
+                        >
+                            Who are you?
+                        </Text>))}
                     </Box>
                     {/* Photo Area */}
                 </Box>

@@ -1,6 +1,6 @@
 function GlobalStyle() {
-    return (
-        <style global jsx>{`
+  return (
+    <style global jsx>{`
         * {
           margin: 0;
           padding: 0;
@@ -77,16 +77,38 @@ function GlobalStyle() {
 
       }
 
+      /* Works on Firefox */
+      * {
+      scrollbar-width: thin;
+      scrollbar-color: white #181F25;
+    }
+    
+    /* Works on Chrome, Edge, and Safari */
+    *::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    *::-webkit-scrollbar-track {
+      background: #181F25;
+      border-radius: 20px;
+    }
+    
+    *::-webkit-scrollbar-thumb {
+      /* background-color: #101418; */
+      background-color: white;
+      border-radius: 20px;
+      /* border: 1px solid white; */
+    }
         /* ./App fit Height */ 
       `}</style>
-    );
+  );
 }
 
-export default function App ({ Component, pageProps }){
-    return (
-        <>
-            <GlobalStyle />
-            <Component {...pageProps} />
-        </>
-    )
+export default function App({ Component, pageProps }) {
+  return (
+    <>
+      <GlobalStyle />
+      <Component {...pageProps} />
+    </>
+  )
 }

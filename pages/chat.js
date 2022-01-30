@@ -28,7 +28,7 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
 
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function escutaMensagensEmTempoReal(adicionaMensagem) {
+    function messagesReload(adicionaMensagem) {
         return supabaseClient.from('mensagens').on('INSERT', (respostaLive) => {
             adicionaMensagem(respostaLive.new);
         }).subscribe();
@@ -45,7 +45,7 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
             setListaDeMensagens(data)
         });
 
-        escutaMensagensEmTempoReal((novaMensagem) => {
+        messagesReload((novaMensagem) => {
             setListaDeMensagens((valorAtualDaLista) => {
                 return [
                     novaMensagem,
@@ -122,11 +122,12 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                                         alignItems: 'center',
                                     }}
                                 >
+
                                     <TextField
                                         value={mensagem}
                                         onChange={(e) => setMensagem(e.target.value)}
                                         onKeyPress={(e) => {
-                                            if (e.key === 'Enter') {
+                                            if (e.key === 'Enter' && mensagem.length !== 0 && (mensagem.trim() !== '')) {
                                                 e.preventDefault();
                                                 handleNovaMensagem(mensagem);
                                             }
@@ -150,7 +151,9 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                                     }} />
 
                                     <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
-                                        handleNovaMensagem(mensagem)
+                                        if (mensagem.length !== 0 && (mensagem.trim() !== '')) {
+                                            handleNovaMensagem(mensagem)
+                                        }
                                     }}
                                     />
 
