@@ -122,6 +122,9 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                                         alignItems: 'center',
                                     }}
                                 >
+                                    <ButtonSendSticker onStickerClick={(sticker) => {
+                                        handleNovaMensagem(`:sticker: ${sticker}`);
+                                    }} />
 
                                     <TextField
                                         value={mensagem}
@@ -146,9 +149,7 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                                         }}
                                     />
 
-                                    <ButtonSendSticker onStickerClick={(sticker) => {
-                                        handleNovaMensagem(`:sticker: ${sticker}`);
-                                    }} />
+                                    
 
                                     <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
                                         if (mensagem.length !== 0 && (mensagem.trim() !== '')) {

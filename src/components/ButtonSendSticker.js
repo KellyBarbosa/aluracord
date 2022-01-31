@@ -5,6 +5,34 @@ import appConfig from '../../config.json';
 export function ButtonSendSticker(props) {
   const [isOpen, setOpenState] = React.useState('');
 
+  const [emoji, setEmoji] = React.useState();
+
+
+  React.useEffect(() => {
+    const emojis = {
+      1: '🙂',
+      2: '😙',
+      3: '🤩',
+      4: '🤨',
+      5: '🙄',
+      6: '🤯',
+      7: '😴',
+      8: '😜',
+      9: '😝',
+      10: '😬',
+      11: '😆',
+      12: '🤓',
+      13: '👀',
+      14: '😌',
+      15: '😎'
+    };
+    const randomEmojis = Math.floor(Math.random() * (15 - 1) + 1);
+
+    const trocaEmojis = emojis[randomEmojis];
+    setEmoji(trocaEmojis)
+
+  }, []);
+
   return (
     <Box
       styleSheet={{
@@ -13,7 +41,7 @@ export function ButtonSendSticker(props) {
     >
       <Button
         styleSheet={{
-          borderRadius: '50%',
+          /* borderRadius: '50%', */
           padding: '0 3px 0 0',
           minWidth: '50px',
           minHeight: '50px',
@@ -22,15 +50,46 @@ export function ButtonSendSticker(props) {
           lineHeight: '0',
           display: 'flex',
           alignItems: 'center',
+          marginRight: '12px',
           justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.neutrals[300],
-          filter: isOpen ? 'grayscale(0)' : 'grayscale(1)',
+          backgroundColor: appConfig.theme.colors.neutrals[800],
+          filter: isOpen ? 'grayscale(1)' : 'grayscale(0)',
           hover: {
-            filter: 'grayscale(0)',
+            /* filter: 'grayscale(0)', */
+            boxShadow: ' 0 0 1em rgb( 223, 184, 122)',
           }
         }}
-        label="😋"
-        onClick={() => setOpenState(!isOpen)}
+        buttonColors={{
+          contrastColor: appConfig.theme.colors.primary[1000],
+          mainColor: appConfig.theme.colors.primary["000"],
+          mainColorLight: appConfig.theme.colors.neutrals[800],
+          mainColorStrong: appConfig.theme.colors.neutrals[800],
+        }}
+        label={emoji}
+        onClick={() => {
+          const randomEmojis = Math.floor(Math.random() * (15 - 1) + 1);
+          const emojis = {
+            1: '🙂',
+            2: '😙',
+            3: '🤩',
+            4: '🤨',
+            5: '🙄',
+            6: '🤯',
+            7: '😴',
+            8: '😜',
+            9: '😝',
+            10: '😬',
+            11: '😆',
+            12: '🤓',
+            13: '👀',
+            14: '😌',
+            15: '😎'
+          };
+          const trocaEmojis = emojis[randomEmojis];
+          setEmoji(trocaEmojis)
+          setOpenState(!isOpen)
+        }
+        }
       />
       {isOpen && (
         <Box
@@ -45,7 +104,7 @@ export function ButtonSendSticker(props) {
               sm: '290px',
             },
             height: '300px',
-            right: '30px',
+            left: '30px',
             bottom: '30px',
             padding: '16px',
             boxShadow: 'rgba(4, 4, 5, 0.15) 0px 0px 0px 1px, rgba(0, 0, 0, 0.24) 0px 8px 16px 0px',
@@ -68,13 +127,12 @@ export function ButtonSendSticker(props) {
               justifyContent: 'space-between',
               flex: 1,
               paddingTop: '16px',
-              overflow: 'scroll',
+              overflow: 'auto',
             }}
           >
             {appConfig.stickers.map((sticker) => (
               <Text
                 onClick={() => {
-                  // console.log('[DENTRO DO COMPONENTE] Clicou no sticker:', sticker);
                   if (Boolean(props.onStickerClick)) {
                     props.onStickerClick(sticker);
                   }

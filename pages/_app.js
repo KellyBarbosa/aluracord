@@ -29,7 +29,7 @@ function GlobalStyle() {
           color: #E0F2E9;
           cursor: pointer;
       }
-
+      
       .iconTrash {
         cursor: pointer;
         margin-left: auto;
