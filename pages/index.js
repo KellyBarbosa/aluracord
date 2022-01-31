@@ -102,34 +102,34 @@ export default function PaginaInicial() {
                                 setUsername(name);
                                 fetch(`${apiGit}${name}`).then((resp) => {
                                     if (resp.status === 200) {
-                                        console.log('Pegou 200')
+                                        /* console.log('Pegou 200') */
                                         setButton(true);
                                         setImage(`${gitURL}${name}.png`);
                                         setUserExists(true);
                                     } else if (resp.status === 404) {
-                                        console.log('Pegou 404')
+                                        /* console.log('Pegou 404') */
                                         setImage(userError);
                                         setButton(false);
                                         setUserExists(false);
                                         setMsg('Usuário inexistente!');
                                         /* setUsername('Usuário inexistente!') */
                                     } else if (resp.status === 403) {
-                                        console.log('Pegou 403')
+                                        /* console.log('Pegou 403') */
                                         setImage(userError);
                                         setButton(false);
                                         setUserExists(false);
                                         setMsg('Limite de uso da API excedido!');
 /*                                         setUsername('Limite de uso da API excedido!')
 
- */                                    } else if (username.length < 2 && (username.trim() === '') && username.length === null) {
-                                        console.log('Vazio ou menor que 2 ')
+ */                                    } else if (/* username.length < 2 && */ (username.trim() === '') && username.length === null) {
+                                       /*  console.log('Vazio ou menor que 2 ') */
                                         setImage('https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif')
                                         setMsg('Who are you?');
 /*                                         setUsername('Who are you?')
  */                                        setButton(false);
                                         setUserExists(false);
                                     } else {
-                                        console.log('Algo de errado')
+                                        /* console.log('Algo de errado') */
                                         setImage(userError);
                                         setMsg('Algo deu errado, tente novamente!');
 /*                                         setUsername('Algo deu errado, tente novamente!')
