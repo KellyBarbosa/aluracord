@@ -76,7 +76,6 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 color: appConfig.theme.colors.neutrals['000']
             }}
-
         >
 
             <Box
@@ -147,9 +146,7 @@ export default function ChatPage({ SUPABASE_URL, SUPABASE_ANON_KEY }) {
                                             marginRight: '12px',
                                             color: appConfig.theme.colors.neutrals[200],
                                         }}
-                                    />
-
-                                    
+                                    />                            
 
                                     <FontAwesomeIcon className="iconUp" icon={faLevelUp} onClick={(e) => {
                                         if (mensagem.length !== 0 && (mensagem.trim() !== '')) {
@@ -187,13 +184,21 @@ function Header() {
     )
 }
 
-function MessageList(props) {
+function MessageList({mensagens, setLista, user}) {
 
-    const [mouse, setMouse] = React.useState('');
+    function formatDate(data){
+        const originalDate = new Date(data);
+        console.log('new date: ', originalDate);
+        const currentDate = new Date();
+        console.log('data atual: ', currentDate);
+        const day = (currentDate.toLocaleDateString() === originalDate.toLocaleDateString()) ? 'Hoje' : originalDate.toLocaleDateString();
+        console.log('data toLocale: ', currentDate.toLocaleDateString());
+        return (`${day} às ${originalDate.toLocaleTimeString()}`)
+    }
 
     function handleRemove(id) {
-        const lista = props.mensagens.filter((msg) => msg.id !== id)
-        props.setLista(lista)
+        const lista = mensagens.filter((msg) => msg.id !== id)
+        setLista(lista)
     }
 
     return (
@@ -210,7 +215,7 @@ function MessageList(props) {
                     overflow: 'auto',
                 }}
             >
-                {props.mensagens.map((mensagem) => {
+                {mensagens.map((mensagem) => {
                     return (
 
                         <Text
@@ -253,10 +258,12 @@ function MessageList(props) {
                                     }}
                                     tag="span"
                                 >
-                                    {(new Date().toLocaleDateString())}
+                                    {/* {(new Date().toLocaleDateString())} */}
+                                    {formatDate(mensagem.created_at)}
+                                    
                                 </Text>
                                 
-                                    {( props.user === mensagem.from) && (<FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
+                                    {( user === mensagem.from) && (<FontAwesomeIcon className='iconTrash' icon={faTrashCan} onClick={() => {
                                     handleRemove(mensagem.id)
                                 }} />)}
 

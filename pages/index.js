@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 const apiGit = 'https://api.github.com/users/';
 const gitURL = 'https://github.com/';
 const userError = 'https://media1.giphy.com/media/TqiwHbFBaZ4ti/200w.webp?cid=ecf05e47dfil86230vvv8tjtxheufu5jzjvtu2n6bvtfzb5f&rid=200w.webp&ct=g';
+const catReload = 'https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif';
 
 function Titulo(props) {
 
@@ -32,7 +33,7 @@ function Titulo(props) {
 export default function PaginaInicial() {
     const [username, setUsername] = React.useState('');
     const roteamento = useRouter();
-    const [image, setImage] = React.useState('https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif');
+    const [image, setImage] = React.useState(catReload);
     const [button, setButton] = React.useState(false);
     const [userExists, setUserExists] = React.useState(false);
     const [msg, setMsg] = React.useState('Who are you?');
@@ -76,24 +77,10 @@ export default function PaginaInicial() {
 
                         }}
                     >
-                        <Titulo tag="h2">Boas vindas de volta!</Titulo>
+                        <Titulo tag="h2">Bem-vindo(a) de volta!</Titulo>
                         <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                             {appConfig.name}
                         </Text>
-
-                        {/* <TextField
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            fullWidth
-                            textFieldColors={{
-                                neutral: {
-                                    textColor: appConfig.theme.colors.neutrals[200],
-                                    mainColor: appConfig.theme.colors.neutrals[900],
-                                    mainColorHighlight: appConfig.theme.colors.primary[500],
-                                    backgroundColor: appConfig.theme.colors.neutrals[800],
-                                },
-                            }}
-                        /> */}
 
                         <TextField
                             value={username}
@@ -102,39 +89,42 @@ export default function PaginaInicial() {
                                 setUsername(name);
                                 fetch(`${apiGit}${name}`).then((resp) => {
                                     if (resp.status === 200) {
-                                        /* console.log('Pegou 200') */
                                         setButton(true);
                                         setImage(`${gitURL}${name}.png`);
                                         setUserExists(true);
                                     } else if (resp.status === 404) {
-                                        /* console.log('Pegou 404') */
                                         setImage(userError);
                                         setButton(false);
                                         setUserExists(false);
                                         setMsg('Usuário inexistente!');
-                                        /* setUsername('Usuário inexistente!') */
+                                        setTimeout(() => {
+                                            setImage(catReload)
+                                            setMsg('Who are you?');
+                                        }, 10000)
                                     } else if (resp.status === 403) {
-                                        /* console.log('Pegou 403') */
                                         setImage(userError);
                                         setButton(false);
                                         setUserExists(false);
                                         setMsg('Limite de uso da API excedido!');
-/*                                         setUsername('Limite de uso da API excedido!')
+                                        setTimeout(() => {
+                                            setImage(catReload)
+                                            setMsg('Who are you?');
+                                        }, 10000)
 
- */                                    } else if (/* username.length < 2 && */ (username.trim() === '') && username.length === null) {
-                                       /*  console.log('Vazio ou menor que 2 ') */
-                                        setImage('https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif')
+                                   }/*  else if ( username.length === 0 || (username.trim() === '') || username.length === null) {                                    
+                                        setImage(catReload)
                                         setMsg('Who are you?');
-/*                                         setUsername('Who are you?')
- */                                        setButton(false);
+                                       setButton(false);
                                         setUserExists(false);
-                                    } else {
-                                        /* console.log('Algo de errado') */
+                                    } */ else {
                                         setImage(userError);
                                         setMsg('Algo deu errado, tente novamente!');
-/*                                         setUsername('Algo deu errado, tente novamente!')
- */                                       setButton(false);
+                                      setButton(false);
                                         setUserExists(false);
+                                        setTimeout(() => {
+                                            setImage(catReload)
+                                            setMsg('Who are you?');
+                                        }, 10000)
                                     }
                                 })
 
@@ -167,36 +157,6 @@ export default function PaginaInicial() {
                             disabled={!button}
                         />
 
-                        {/* {username.length > 2 ? (
-                            <Button
-                                type='submit'
-                                label='Entrar'
-                                fullWidth
-                                buttonColors={{
-                                    contrastColor: appConfig.theme.colors.neutrals["000"],
-                                    mainColor: appConfig.theme.colors.primary[500],
-                                    mainColorLight: appConfig.theme.colors.primary[400],
-                                    mainColorStrong: appConfig.theme.colors.primary[600],
-                                }}
-                            />
-
-                        ) : (
-                            <Button
-                                type='submit'
-                                label='Entrar'
-                                fullWidth
-                                buttonColors={{
-                                    contrastColor: appConfig.theme.colors.neutrals["000"],
-                                    mainColor: appConfig.theme.colors.primary[500],
-                                    mainColorLight: appConfig.theme.colors.primary[400],
-                                    mainColorStrong: appConfig.theme.colors.primary[600],
-                                }}
-                                disabled
-                            />
-
-                        )} */}
-
-
                     </Box>
                     {/* Formulário */}
 
@@ -218,22 +178,6 @@ export default function PaginaInicial() {
                         }}
                     >
 
-                        {/* {username.length > 2 ? (<Image
-                            styleSheet={{
-                                borderRadius: '50%',
-                                marginBottom: '16px',
-                            }}
-                            src={`https://github.com/${username}.png`}
-                        />) : (
-                            <Image
-                                styleSheet={{
-                                    borderRadius: '50%',
-                                    marginBottom: '16px',
-                                }}
-                                src={`https://c.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif`}
-                            />)
-                        } */}
-
                         <Image
                             styleSheet={{
                                 borderRadius: '50%',
@@ -241,28 +185,7 @@ export default function PaginaInicial() {
                             }}
                             src={image}
                         />
-
-                        {/* {username.length > 2 ? (<Text
-                            variant="body4"
-                            styleSheet={{
-                                color: appConfig.theme.colors.neutrals[200],
-                                backgroundColor: appConfig.theme.colors.neutrals[900],
-                                padding: '3px 10px',
-                                borderRadius: '1000px'
-                            }}
-                        >
-                            {username}
-                        </Text>) : ((<Text
-                            variant="body4"
-                            styleSheet={{
-                                color: appConfig.theme.colors.neutrals[200],
-                                backgroundColor: appConfig.theme.colors.neutrals[900],
-                                padding: '3px 10px',
-                                borderRadius: '1000px'
-                            }}
-                        >
-                            Who are you?
-                        </Text>))} */}
+                        
                         {userExists ? (<Text
                             variant="body4"
                             styleSheet={{
